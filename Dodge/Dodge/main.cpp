@@ -6,12 +6,17 @@
 #include "Start.h"
 #include "GameLogic.h"
 #pragma comment(lib, "winmm.lib")
-
 using namespace std;
 
-int main() {
+int main() 
+{
 	srand((unsigned int)time(NULL));
 	CursorSet(false, 1);
+
+	char map[12][10] = {};
+	OBJECT Player = {};
+
+	Map(map);
 
 	while (true)
 	{
@@ -34,10 +39,6 @@ int main() {
 			return 0;
 		}
 	}
-	system("cls");
-
-	for (int i = 0; i < 10; i++)
-	{
-		SetEnemy();
-	}
+	system("cls"); // 스타트 화면
+	
 }
