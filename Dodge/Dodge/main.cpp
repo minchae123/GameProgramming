@@ -13,10 +13,10 @@ int main()
 	srand((unsigned int)time(NULL));
 	CursorSet(false, 1);
 
-	char map[12][10] = {};
+	char map[12][11] = {};
 	OBJECT Player = {};
 
-	Map(map);
+	Map(map, &Player);
 
 	while (true)
 	{
@@ -41,4 +41,11 @@ int main()
 	}
 	system("cls"); // 스타트 화면
 	
+
+	while (true)
+	{
+		Gotoxy(0, 0);
+		Render(map, &Player);
+		Update(&Player, map);
+	}
 }
