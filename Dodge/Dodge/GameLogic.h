@@ -26,17 +26,19 @@ typedef struct _tagObject {
 	int color;
 	string shape;
 	int heart;
+	int score = 0;
 }OBJECT, * OOBJECT;
 
 
-void SetEnemy();
+void SetEnemy(OOBJECT enemy, char map[12][11]);
 std::string SelectShape(int n);
 int SelectColor(int n);
 //void PlayerMove(OOBJECT object, char map[12][11]);
 void PlayerChangeShape(OOBJECT object);
 void PlayerChangeColor(OOBJECT object);
-void Map(char map[12][11], OOBJECT player);
-void Render(char map[12][11], OOBJECT player);
-void Update(OOBJECT player, char map[12][11]);
-
+void Map(char map[12][11], OOBJECT player, OOBJECT enemy);
+void Render(char map[12][11], OOBJECT player, OOBJECT enemy);
+void Update(OOBJECT player, char map[12][11], OOBJECT enemy);
+void EnemyMove(char map[12][11], OOBJECT enemy);
 bool Check(OOBJECT player, OOBJECT enemy);
+void Heart(OOBJECT player);

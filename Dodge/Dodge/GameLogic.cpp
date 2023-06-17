@@ -1,14 +1,21 @@
 #include "GameLogic.h"
 using namespace std;
 
-void SetEnemy()
+void SetEnemy(OOBJECT enemy, char map[12][11])
 {
 	int sr = rand() % 4;
 	int cr = rand() % 4;
 
-	SetColor(SelectColor(cr), (int)COLOR::BLACK);
-	cout << SelectShape(sr) << " " << endl;
-	SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
+	enemy->color = SelectColor(cr);
+	enemy->shape = SelectShape(sr);
+
+	enemy->tPos.x = 1;
+	enemy->tPos.y = 2;
+
+	for (int m = 0; m < 8; m++)
+	{
+		map[10][m + 1] = '0';
+	}
 }
 
 std::string SelectShape(int n)
@@ -75,14 +82,13 @@ void PlayerChangeShape(OOBJECT object)
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000) 
 	{
 		object->indexS++;
-		Sleep(100);
+		Sleep(10);
 	}
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
 		object->indexS--;
-		Sleep(100);
+		Sleep(10);
 	}
 	object->indexS = std::clamp(object->indexS, 0, 3);
-
 	object->shape = SelectShape(object->indexS);
 }
 
@@ -91,18 +97,17 @@ void PlayerChangeColor(OOBJECT object)
 	if (GetAsyncKeyState(VK_UP) & 0x8000)
 	{
 		object->indexC++;
-		Sleep(100);
+		Sleep(10);
 	}
 	if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
 		object->indexC--;
-		Sleep(100);
+		Sleep(10);
 	}
 	object->indexC = std::clamp(object->indexC, 0, 3);
-
 	object->color = SelectColor(object->indexC);
 }
 
-void Map(char map[12][11], OOBJECT player) 
+void Map(char map[12][11], OOBJECT player, OOBJECT enemy)
 {
 	strcpy_s(map[0],  "1222222221");
 	strcpy_s(map[1],  "1000000001");
@@ -122,9 +127,14 @@ void Map(char map[12][11], OOBJECT player)
 	player->shape = SelectShape(1);
 	player->color = SelectColor(1);
 	player->heart = 5;
+
+	enemy->tPos.x = 1;
+	enemy->tPos.y = 2;
+	enemy->shape = SelectShape(1);
+	enemy->color = SelectColor(1);
 }
 
-void Render(char map[12][11], OOBJECT player)
+void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 {
 	for (int i = 0; i < 12; i++) 
 	{
@@ -136,6 +146,18 @@ void Render(char map[12][11], OOBJECT player)
 				for (int m = 0; m < 8; m++)
 				{
 					cout << player->shape;
+				}
+				SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
+			}
+			if (enemy->tPos.x == j && enemy->tPos.y == i)
+			{
+				SetColor(enemy->color, (int)COLOR::BLACK);
+				for (int m = 0; m < 8; m++)		
+				{
+					cout << enemy->shape;
+					map[i][m + 1] = '3';
+					if (i >= 1)
+						map[i - 1][m + 1] = '0';
 				}
 				SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
 			}
@@ -158,8 +180,59 @@ void Render(char map[12][11], OOBJECT player)
 
 	cout << endl;
 	cout << "모양 바꾸는 키 : 오른쪽, 왼쪽 방향키" << endl;
+	cout << "클로버 ♣ / 다이아몬드 ◈ / 별 ★ / 하트 ♥" << endl;
 	cout << "색   바꾸는 키 : 위쪽, 아래쪽 방향키" << endl;
+	SetColor((int)COLOR::LIGHT_GREEN, (int)COLOR::BLACK);
+	cout << "연두 ";
+	SetColor((int)COLOR::LIGHT_BLUE, (int)COLOR::BLACK);
+	cout << "파랑 ";
+	SetColor((int)COLOR::LIGHT_YELLOW, (int)COLOR::BLACK);
+	cout << "노랑 ";
+	SetColor((int)COLOR::LIGHT_VIOLET, (int)COLOR::BLACK);
+	cout << "보라 " << endl;
+	SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
 
+	Heart(player);
+	cout << "         ";
+	cout << endl;
+	cout << "현재 점수 :  " << player->score;
+}
+
+void Update(OOBJECT player, char map[12][11], OOBJECT enemy)
+{
+	EnemyMove(map, enemy);
+
+	if (enemy->tPos.y == 10)
+	{
+		if (Check(player, enemy))
+		{
+			player->score += 100;
+		}
+		else
+		{
+			player->heart--;
+		}
+		SetEnemy(enemy, map);
+	}
+}
+
+bool Check(OOBJECT player, OOBJECT enemy)
+{
+	if (player->color == enemy->color && player->shape == enemy->shape)
+	{
+		return true;
+	}
+	return false;
+}
+
+void EnemyMove(char map[12][11], OOBJECT enemy)
+{
+	Sleep(1000);
+	enemy->tPos.y++;
+}
+
+void Heart(OOBJECT player)
+{
 	int heart = player->heart;
 	cout << "남은 목숨 : ";
 	for (int i = 0; i < heart; i++) {
@@ -169,25 +242,4 @@ void Render(char map[12][11], OOBJECT player)
 	}
 }
 
-void Update(OOBJECT player, char map[12][11])
-{
-	//PlayerMove(player, map);
-	PlayerChangeShape(player);
-	PlayerChangeColor(player);
-	if (GetAsyncKeyState(VK_F1) & 0x8000)
-		player->heart--;
-
-}
-
-bool Check(OOBJECT player, OOBJECT enemy)
-{
-	if (enemy->tPos.y == 10)
-	{
-		if (player->color == enemy->color && player->shape == enemy->shape)
-		{
-			return true;
-		}
-	}
-	player->heart--;
-	return false;
-}
+// 

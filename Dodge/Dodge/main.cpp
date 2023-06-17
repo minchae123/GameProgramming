@@ -15,8 +15,9 @@ int main()
 
 	char map[12][11] = {};
 	OBJECT Player = {};
+	OBJECT Enemy = {};
 
-	Map(map, &Player);
+	Map(map, &Player, &Enemy);
 
 	while (true)
 	{
@@ -45,7 +46,18 @@ int main()
 	while (true)
 	{
 		Gotoxy(0, 0);
-		Render(map, &Player);
-		Update(&Player, map);
+		Render(map, &Player, &Enemy);
+		PlayerChangeColor(&Player);
+		PlayerChangeShape(&Player);
+		Update(&Player, map, &Enemy);
+
+		if (Player.heart <= 0)
+		{
+			break;
+		}
 	}
+
+	system("cls");
+	cout << "! 게임 오버 !" << endl;
+	cout << "점수 : " << Player.score;
 }
