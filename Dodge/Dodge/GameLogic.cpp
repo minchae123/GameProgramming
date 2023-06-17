@@ -10,10 +10,11 @@ void SetEnemy(OOBJECT enemy, char map[12][11])
 	enemy->shape = SelectShape(sr);
 
 	enemy->tPos.x = 1;
-	enemy->tPos.y = 2;
+	enemy->tPos.y = 1;
 
 	for (int m = 0; m < 8; m++)
 	{
+		map[0][m + 1] = '2';
 		map[10][m + 1] = '0';
 	}
 }
@@ -129,7 +130,7 @@ void Map(char map[12][11], OOBJECT player, OOBJECT enemy)
 	player->heart = 5;
 
 	enemy->tPos.x = 1;
-	enemy->tPos.y = 2;
+	enemy->tPos.y = 1;
 	enemy->shape = SelectShape(1);
 	enemy->color = SelectColor(1);
 }
@@ -214,6 +215,11 @@ void Update(OOBJECT player, char map[12][11], OOBJECT enemy)
 		}
 		SetEnemy(enemy, map);
 	}
+
+	for (int m = 0; m < 8; m++)
+	{
+		map[0][m + 1] = '2';
+	}
 }
 
 bool Check(OOBJECT player, OOBJECT enemy)
@@ -242,4 +248,6 @@ void Heart(OOBJECT player)
 	}
 }
 
-// 
+// 두줄씩 나오는 거 고치기, 키 입력 잘 안되는거 뭘까 ,,,??
+// 렌더링이 이상함 ㅡㅡ ㅜ.ㅜ
+// 선생님 살려주세요 ㅜㅜ
