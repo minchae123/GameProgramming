@@ -13,7 +13,7 @@ using namespace std;
 int main() 
 {
 	srand((unsigned int)time(NULL));
-	CursorSet(false, 1);
+//	CursorSet(false, 1);
 
 	char map[12][11] = {};
 	OBJECT Player = {};
@@ -44,19 +44,32 @@ int main()
 	}
 	system("cls"); // 스타트 화면
 	
-
+	//clock_t oldtime, curtime;
+	//oldtime = clock();
 	while (true)
 	{
 		Gotoxy(0, 0);
-		Render(map, &Player, &Enemy);
 		PlayerChangeColor(&Player);
 		PlayerChangeShape(&Player);
+		Render(map, &Player, &Enemy);
+
 		Update(&Player, map, &Enemy);
 
 		if (Player.heart <= 0)
 		{
 			break;
 		}
+
+		//while (true)
+		//{
+		//	curtime = clock();
+		//	if (curtime - oldtime > 33)
+		//	{
+		//		curtime = oldtime;
+		//		break;
+		//	}
+		//}
+
 	}
 
 	system("cls");

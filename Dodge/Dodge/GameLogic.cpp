@@ -80,14 +80,14 @@ int SelectColor(int n)
 
 void PlayerChangeShape(OOBJECT object)
 {
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000) 
+	if (GetAsyncKeyState(VK_LEFT) & 0x8001) 
 	{
 		object->indexS++;
-		Sleep(10);
+//		Sleep(10);
 	}
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8001) {
 		object->indexS--;
-		Sleep(10);
+//		Sleep(10);
 	}
 	if (object->indexS > 3) {
 		object->indexS = 0;
@@ -103,14 +103,14 @@ void PlayerChangeShape(OOBJECT object)
 
 void PlayerChangeColor(OOBJECT object)
 {
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	if (GetAsyncKeyState(VK_UP) & 0x8001)
 	{
 		object->indexC++;
-		Sleep(10);
+//		Sleep(10);
 	}
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+	if (GetAsyncKeyState(VK_DOWN) & 0x8001) {
 		object->indexC--;
-		Sleep(10);
+//		Sleep(10);
 	}
 
 	if (object->indexC > 3) {
@@ -153,6 +153,7 @@ void Map(char map[12][11], OOBJECT player, OOBJECT enemy)
 
 void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 {
+	system("cls");
 	for (int i = 0; i < 12; i++) 
 	{
 		for (int j = 0; j < 11; j++) 
@@ -169,18 +170,19 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 			if (enemy->tPos.x == j && enemy->tPos.y == i)
 			{
 				SetColor(enemy->color, (int)COLOR::BLACK);
-				for (int m = 0; m < 8; m++)		
+				for (int m = 1; m < 9; m++)		
 				{
-					cout << enemy->shape;
-					map[i][m + 1] = '3';
+					map[i][m] = '3';
 					if (i >= 1)
-						map[i - 1][m + 1] = '0';
+						map[i - 1][m] = '0';
 				}
 				SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
 			}
 			else if (map[i][j] == '1')
 			{
 				cout << "l";
+				if(j == 10)
+					Gotoxy(i, 10);
 			}
 			else if (map[i][j] == '0')
 			{
@@ -190,7 +192,11 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 			{
 				cout << "ㅡ";
 			}
-			else if (map[i][j] == '3')	continue;
+			else if (map[i][j] == '3')
+			{
+				continue;
+			}
+			
 		}
 		cout << endl;
 	}
@@ -249,8 +255,31 @@ bool Check(OOBJECT player, OOBJECT enemy)
 
 void EnemyMove(char map[12][11], OOBJECT enemy)
 {
-	Sleep(1000);
-	enemy->tPos.y++;
+//	Sleep(1000);
+	//clock_t oldtime, curtime;
+	//oldtime = clock();
+	//while (true)
+	//{
+	//	curtime = clock();
+	//	if (curtime - oldtime > 1000)
+	//		break;
+	//}
+	clock_t oldtime, curtime;
+	oldtime = clock();
+
+	while (true)
+	{
+		curtime = clock();
+		if (curtime - oldtime > 1000)
+		{
+			curtime = oldtime;
+			enemy->tPos.y++;
+			break;
+		}
+		else
+			continue;
+	}
+
 }
 
 void Heart(OOBJECT player)
@@ -259,11 +288,7 @@ void Heart(OOBJECT player)
 	cout << "남은 목숨 : ";
 	for (int i = 0; i < heart; i++) {
 		SetColor((int)COLOR::RED, (int)COLOR::BLACK);
-		cout << "♡ ";
+		cout << "♥ ";
 		SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
 	}
 }
-
-// 두줄씩 나오는 거 고치기, 키 입력 잘 안되는거 뭘까 ,,,??
-// 렌더링이 이상함 ㅡㅡ ㅜ.ㅜ 키 입력이 느려 ,, 왜 ,, 난 아무것도 하지 않았ㄴ는데,, 아무것도 안해서 그런가,,
-// 선생님 살려주세요 ㅜㅜ
