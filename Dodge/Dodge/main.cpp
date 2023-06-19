@@ -5,6 +5,8 @@
 #include "console.h"
 #include "Start.h"
 #include "GameLogic.h"
+#include "End.h"
+
 #pragma comment(lib, "winmm.lib")
 using namespace std;
 
@@ -58,6 +60,5 @@ int main()
 	}
 
 	system("cls");
-	cout << "! 게임 오버 !" << endl;
-	cout << "점수 : " << Player.score;
+	DrawEnd(Player.score);
 }

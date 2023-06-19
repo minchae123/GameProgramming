@@ -15,7 +15,7 @@ void SetEnemy(OOBJECT enemy, char map[12][11])
 	for (int m = 0; m < 8; m++)
 	{
 		map[0][m + 1] = '2';
-		map[10][m + 1] = '0';
+		map[9][m + 1] = '0';
 	}
 }
 
@@ -89,7 +89,15 @@ void PlayerChangeShape(OOBJECT object)
 		object->indexS--;
 		Sleep(10);
 	}
-	object->indexS = std::clamp(object->indexS, 0, 3);
+	if (object->indexS > 3) {
+		object->indexS = 0;
+	}
+	else if (object->indexS < 0)
+	{
+		object->indexS = 3;
+	}
+
+	//object->indexS = std::clamp(object->indexS, 0, 3);
 	object->shape = SelectShape(object->indexS);
 }
 
@@ -104,7 +112,15 @@ void PlayerChangeColor(OOBJECT object)
 		object->indexC--;
 		Sleep(10);
 	}
-	object->indexC = std::clamp(object->indexC, 0, 3);
+
+	if (object->indexC > 3) {
+		object->indexC = 0;
+	}
+	else if(object->indexC < 0)
+	{
+		object->indexC = 3;
+	}
+	//object->indexC = std::clamp(object->indexC, 0, 3);
 	object->color = SelectColor(object->indexC);
 }
 
@@ -249,5 +265,5 @@ void Heart(OOBJECT player)
 }
 
 // 두줄씩 나오는 거 고치기, 키 입력 잘 안되는거 뭘까 ,,,??
-// 렌더링이 이상함 ㅡㅡ ㅜ.ㅜ
+// 렌더링이 이상함 ㅡㅡ ㅜ.ㅜ 키 입력이 느려 ,, 왜 ,, 난 아무것도 하지 않았ㄴ는데,, 아무것도 안해서 그런가,,
 // 선생님 살려주세요 ㅜㅜ
