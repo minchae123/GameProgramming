@@ -126,6 +126,10 @@ void PlayerChangeColor(OOBJECT object)
 
 void Map(char map[12][11], OOBJECT player, OOBJECT enemy)
 {
+	system("mode con cols=80 lines=27");
+	HWND console = GetConsoleWindow();
+	SetWindowLong(console, GWL_STYLE, GetWindowLong(console, GWL_STYLE) & ~WS_THICKFRAME);
+
 	strcpy_s(map[0],  "1222222221");
 	strcpy_s(map[1],  "1000000001");
 	strcpy_s(map[2],  "1000000001");
@@ -143,7 +147,7 @@ void Map(char map[12][11], OOBJECT player, OOBJECT enemy)
 	player->tPos.y = 10;
 	player->shape = SelectShape(1);
 	player->color = SelectColor(1);
-	player->heart = 5;
+	player->heart = 6;
 
 	enemy->tPos.x = 1;
 	enemy->tPos.y = 1;
@@ -156,7 +160,7 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 	system("cls");
 	for (int i = 0; i < 12; i++) 
 	{
-		for (int j = 0; j < 11; j++) 
+		for (int j = 0; j < 10; j++) 
 		{
 			if (player->tPos.x == j && player->tPos.y == i)
 			{
@@ -172,10 +176,11 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 				SetColor(enemy->color, (int)COLOR::BLACK);
 				for (int m = 1; m < 9; m++)		
 				{
-					map[i][m] = '3';
-					if (i >= 1)
+					cout << enemy->shape;
+					if (m >= 1 && m <= 8)
 						map[i - 1][m] = '0';
 				}
+				j = 8;
 				SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
 			}
 			else if (map[i][j] == '1')
@@ -214,6 +219,7 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 	SetColor((int)COLOR::LIGHT_VIOLET, (int)COLOR::BLACK);
 	cout << "보라 " << endl;
 	SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
+	cout << "다운 버튼 : 스페이스 바" << endl;
 
 	Heart(player);
 	cout << "         ";
@@ -223,7 +229,10 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 
 void Update(OOBJECT player, char map[12][11], OOBJECT enemy)
 {
-	EnemyMove(map, enemy);
+	SetConsoleTitle(TEXT("Dodge CS"));
+
+	Skip(enemy, player);
+	EnemyMove(map, enemy, player);
 
 	if (enemy->tPos.y == 10)
 	{
@@ -242,6 +251,27 @@ void Update(OOBJECT player, char map[12][11], OOBJECT enemy)
 	{
 		map[0][m + 1] = '2';
 	}
+
+	if (player->score > 500)
+	{
+		player->time = 900;
+	}
+	else if (player->score > 1000)
+	{
+		player->time = 800;
+	}
+	else if(player->score > 1500)
+	{
+		player->time = 700;
+	}
+	else if (player->score > 2000)
+	{
+		player->time = 600;
+	}
+	else if (player->score > 2500)
+	{
+		player->time = 500;
+	}
 }
 
 bool Check(OOBJECT player, OOBJECT enemy)
@@ -253,9 +283,9 @@ bool Check(OOBJECT player, OOBJECT enemy)
 	return false;
 }
 
-void EnemyMove(char map[12][11], OOBJECT enemy)
+void EnemyMove(char map[12][11], OOBJECT enemy, OOBJECT player)
 {
-//	Sleep(1000);
+	//Sleep(1000);
 	//clock_t oldtime, curtime;
 	//oldtime = clock();
 	//while (true)
@@ -264,13 +294,14 @@ void EnemyMove(char map[12][11], OOBJECT enemy)
 	//	if (curtime - oldtime > 1000)
 	//		break;
 	//}
+
 	clock_t oldtime, curtime;
 	oldtime = clock();
 
 	while (true)
 	{
 		curtime = clock();
-		if (curtime - oldtime > 1000)
+		if (curtime - oldtime > player->time)
 		{
 			curtime = oldtime;
 			enemy->tPos.y++;
@@ -279,7 +310,6 @@ void EnemyMove(char map[12][11], OOBJECT enemy)
 		else
 			continue;
 	}
-
 }
 
 void Heart(OOBJECT player)
@@ -290,5 +320,17 @@ void Heart(OOBJECT player)
 		SetColor((int)COLOR::RED, (int)COLOR::BLACK);
 		cout << "♥ ";
 		SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
+	}
+}
+
+void Skip(OOBJECT enemy, OOBJECT player)
+{
+	if (GetAsyncKeyState(VK_SPACE) & 0x8001)
+	{
+		enemy->tPos.y = 9;
+		if (enemy->shape == player->shape)
+		{
+			player->score += 150;
+		}
 	}
 }

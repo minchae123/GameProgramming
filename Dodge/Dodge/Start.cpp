@@ -11,6 +11,7 @@ using namespace std;
 void GameTitle()
 {
 	int prevmode = _setmode(_fileno(stdout), _O_U16TEXT);
+	SetConsoleTitle(TEXT("Dodge CS"));
 
 	SetColor((int)COLOR::BLUE, (int)COLOR::SKYBLUE);
 	wcout << L"	██████╗  ██████╗ ██████╗  ██████╗ ███████╗     ██████╗███████╗	" << endl;

@@ -27,6 +27,7 @@ typedef struct _tagObject {
 	string shape;
 	int heart;
 	int score = 0;
+	int time = 1000;
 }OBJECT, * OOBJECT;
 
 
@@ -39,6 +40,7 @@ void PlayerChangeColor(OOBJECT object);
 void Map(char map[12][11], OOBJECT player, OOBJECT enemy);
 void Render(char map[12][11], OOBJECT player, OOBJECT enemy);
 void Update(OOBJECT player, char map[12][11], OOBJECT enemy);
-void EnemyMove(char map[12][11], OOBJECT enemy);
+void EnemyMove(char map[12][11], OOBJECT enemy, OOBJECT player);
 bool Check(OOBJECT player, OOBJECT enemy);
 void Heart(OOBJECT player);
+void Skip(OOBJECT enemy, OOBJECT player);

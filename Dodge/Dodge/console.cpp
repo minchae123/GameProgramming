@@ -53,7 +53,6 @@ int Getbgcolor()
 	return color;
 }
 
-
 void fontsize(UINT _weight, UINT _sizex, UINT _sizey)
 {
 	static CONSOLE_FONT_INFOEX font;

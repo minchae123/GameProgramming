@@ -11,6 +11,7 @@ using namespace std;
 void DrawEnd(int score)
 {
 	int prevmode = _setmode(_fileno(stdout), _O_U16TEXT);
+	SetConsoleTitle(TEXT("Dodge CS"));
 
 	SetColor((int)COLOR::BLUE, (int)COLOR::SKYBLUE);
 	wcout << L"	██████╗  ██████╗ ██████╗  ██████╗ ███████╗     ██████╗███████╗	" << endl;
@@ -25,9 +26,7 @@ void DrawEnd(int score)
 
 	cout << endl;
 
-	cout << "---------------------------------" << endl;
-	cout << "l                               l" << endl;
-	cout << "l     "<<"최종 점수 : "<<score<<"     l" << endl;
-	cout << "l                               l" << endl;
+	cout << "---------------------------------" << endl << endl << endl;
+	cout << "     "<<"최종 점수 : "<<score<<"" << endl << endl << endl;
 	cout << "---------------------------------" << endl;
 }
