@@ -208,7 +208,7 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 
 	cout << endl;
 	cout << "모양 바꾸는 키 : 오른쪽, 왼쪽 방향키" << endl;
-	cout << "클로버 ♣ / 다이아몬드 ◈ / 별 ★ / 하트 ♥" << endl;
+	cout << "클로버 ♣ / 다이아몬드 ◈ / 하트 ♥ / 별 ★ " << endl;
 	cout << "색   바꾸는 키 : 위쪽, 아래쪽 방향키" << endl;
 	SetColor((int)COLOR::LIGHT_GREEN, (int)COLOR::BLACK);
 	cout << "연두 ";
@@ -272,6 +272,14 @@ void Update(OOBJECT player, char map[12][11], OOBJECT enemy)
 	{
 		player->time = 500;
 	}
+	else if(player->score > 3000)
+	{
+		player->time = 300;
+	}
+	else if (player->score > 4000)
+	{
+		player->time = 200;
+	}
 }
 
 bool Check(OOBJECT player, OOBJECT enemy)
@@ -285,16 +293,6 @@ bool Check(OOBJECT player, OOBJECT enemy)
 
 void EnemyMove(char map[12][11], OOBJECT enemy, OOBJECT player)
 {
-	//Sleep(1000);
-	//clock_t oldtime, curtime;
-	//oldtime = clock();
-	//while (true)
-	//{
-	//	curtime = clock();
-	//	if (curtime - oldtime > 1000)
-	//		break;
-	//}
-
 	clock_t oldtime, curtime;
 	oldtime = clock();
 
