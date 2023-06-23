@@ -63,31 +63,14 @@ int SelectColor(int n)
 		return 10;
 }
 
-//void PlayerMove(OOBJECT object, char map[12][11])
-//{
-//	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-//	{
-//		--object->tPos.x;
-//		Sleep(100);
-//	}
-//	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-//	{
-//		++object->tPos.x;
-//		Sleep(100);
-//	}
-//	object->tPos.x = std::clamp(object->tPos.x, 1, 8);
-//}
-
 void PlayerChangeShape(OOBJECT object)
 {
 	if (GetAsyncKeyState(VK_LEFT) & 0x8001) 
 	{
 		object->indexS++;
-//		Sleep(10);
 	}
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8001) {
 		object->indexS--;
-//		Sleep(10);
 	}
 	if (object->indexS > 3) {
 		object->indexS = 0;
@@ -97,7 +80,6 @@ void PlayerChangeShape(OOBJECT object)
 		object->indexS = 3;
 	}
 
-	//object->indexS = std::clamp(object->indexS, 0, 3);
 	object->shape = SelectShape(object->indexS);
 }
 
@@ -106,11 +88,9 @@ void PlayerChangeColor(OOBJECT object)
 	if (GetAsyncKeyState(VK_UP) & 0x8001)
 	{
 		object->indexC++;
-//		Sleep(10);
 	}
 	if (GetAsyncKeyState(VK_DOWN) & 0x8001) {
 		object->indexC--;
-//		Sleep(10);
 	}
 
 	if (object->indexC > 3) {
@@ -120,7 +100,6 @@ void PlayerChangeColor(OOBJECT object)
 	{
 		object->indexC = 3;
 	}
-	//object->indexC = std::clamp(object->indexC, 0, 3);
 	object->color = SelectColor(object->indexC);
 }
 
@@ -145,8 +124,8 @@ void Map(char map[12][11], OOBJECT player, OOBJECT enemy)
 
 	player->tPos.x = 1;
 	player->tPos.y = 10;
-	player->shape = SelectShape(1);
-	player->color = SelectColor(1);
+	player->shape = SelectShape(0);
+	player->color = SelectColor(0);
 	player->heart = 6;
 
 	enemy->tPos.x = 1;
@@ -183,21 +162,21 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 				j = 8;
 				SetColor((int)COLOR::WHITE, (int)COLOR::BLACK);
 			}
-			else if (map[i][j] == '1')
+			else if (map[i][j] == '1') // 옆 벽
 			{
 				cout << "l";
 				if(j == 10)
 					Gotoxy(i, 10);
 			}
-			else if (map[i][j] == '0')
+			else if (map[i][j] == '0') // 빈공간
 			{
 				cout << "  ";
 			}
-			else if (map[i][j] == '2')
+			else if (map[i][j] == '2') // 맨 위 아래 줄
 			{
 				cout << "ㅡ";
 			}
-			else if (map[i][j] == '3')
+			else if (map[i][j] == '3') // 플레이어나 적이 있는 위치
 			{
 				continue;
 			}
@@ -208,7 +187,7 @@ void Render(char map[12][11], OOBJECT player, OOBJECT enemy)
 
 	cout << endl;
 	cout << "모양 바꾸는 키 : 오른쪽, 왼쪽 방향키" << endl;
-	cout << "클로버 ♣ / 다이아몬드 ◈ / 하트 ♥ / 별 ★ " << endl;
+	cout << "클로버 ♣ / 하트 ♥ / 별 ★ / 다이아몬드 ◈" << endl;
 	cout << "색   바꾸는 키 : 위쪽, 아래쪽 방향키" << endl;
 	SetColor((int)COLOR::LIGHT_GREEN, (int)COLOR::BLACK);
 	cout << "연두 ";
@@ -239,10 +218,12 @@ void Update(OOBJECT player, char map[12][11], OOBJECT enemy)
 		if (Check(player, enemy))
 		{
 			player->score += 100;
+			Beep(698.46f, 200);
 		}
 		else
 		{
 			player->heart--;
+			Beep(932.33f, 200);
 		}
 		SetEnemy(enemy, map);
 	}
@@ -252,7 +233,7 @@ void Update(OOBJECT player, char map[12][11], OOBJECT enemy)
 		map[0][m + 1] = '2';
 	}
 
-	if (player->score > 500)
+	if (player->score > 500) // 이부분은 그냥 전부 일일이 설정해주었습니다 ,,
 	{
 		player->time = 900;
 	}
@@ -331,4 +312,18 @@ void Skip(OOBJECT enemy, OOBJECT player)
 			player->score += 150;
 		}
 	}
+}
+
+MCI_OPEN_PARMS openBgm; //여는거
+MCI_PLAY_PARMS playBgm; //재생용
+UINT Bgmid;
+
+void PlayBgm()
+{
+	openBgm.lpstrDeviceType = TEXT("mpegvideo");
+	openBgm.lpstrElementName = TEXT("BGM.mp3");
+	mciSendCommand(0, MCI_OPEN, MCI_OPEN_ELEMENT | MCI_OPEN_TYPE, (DWORD_PTR)&openBgm);
+	openBgm.wDeviceID;
+	Bgmid = openBgm.wDeviceID;
+	mciSendCommand(Bgmid, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD_PTR)&openBgm);
 }

@@ -45,6 +45,7 @@ int main()
 	system("cls"); // 스타트 화면
 	
 	fontsize(30, 27, 27);
+	PlayBgm();
 	while (true)
 	{
 		Gotoxy(0, 0);
